@@ -200,7 +200,8 @@ nvcc --version
 - nvidia-smi shows driver 580.x, CUDA 12.8
 - nvcc shows `Cuda compilation tools, release 12.8`
 
-> [!IMPORTANT] **If nvidia-smi fails:** Reinstall NVIDIA driver (Phase 0A), then verify again.
+> [!IMPORTANT] 
+> **If nvidia-smi fails:** Reinstall NVIDIA driver (Phase 0A), then verify again.
 
 **STOP if either command fails. Do not proceed to LXC setup.**
 
@@ -244,7 +245,8 @@ lxc.mount.entry: /dev/nvidia-modeset dev/nvidia-modeset none bind,optional,creat
 
 For multiple GPUs, add additional nvidia entries (nvidia1, nvidia2, etc.)
 
-> [!TIP] **Detailed Instructions:** See [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) for step-by-step GPU passthrough configuration.
+> [!TIP]
+> **Detailed Instructions:** See [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) for step-by-step GPU passthrough configuration.
 
 ---
 
@@ -315,7 +317,8 @@ apt install -y cuda-toolkit-12-8
 
 Note: Some optional packages may fail — that's OK if nvcc works.
 
-> [!NOTE] If `nvidia-smi` stops working after this step, reinstall the driver (Phase 2).
+> [!NOTE]
+> If `nvidia-smi` stops working after this step, reinstall the driver (Phase 2).
 
 ---
 
