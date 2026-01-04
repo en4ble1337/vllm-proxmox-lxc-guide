@@ -375,7 +375,8 @@ pip install huggingface_hub
 ```bash
 huggingface-cli login
 ```
-
+> [!NOTE]
+> Need to register with huggingface and get your API
 ---
 
 ## Phase 9: Test vLLM
