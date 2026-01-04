@@ -169,7 +169,8 @@ apt update
 apt install -y cuda-toolkit-12-8
 ```
 
-**Note:** CUDA toolkit installation may break NVIDIA driver. If `nvidia-smi` stops working after this step, reinstall the driver (Phase 0A).
+> [!NOTE]
+> CUDA toolkit installation may break NVIDIA driver. If `nvidia-smi` stops working after this step, reinstall the driver (Phase 0A).
 
 ---
 
