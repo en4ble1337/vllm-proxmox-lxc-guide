@@ -302,7 +302,8 @@ apt install -y \
     libcurl4-openssl-dev \
     python3-full \
     python3-pip \
-    python3-venv
+    python3-venv \
+    python3.10-venv
 ```
 
 ---
