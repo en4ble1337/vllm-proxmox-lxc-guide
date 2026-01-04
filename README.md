@@ -508,11 +508,7 @@ vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 \
 Test from another machine:
 
 ```bash
-curl -s http://YOUR_LXC_IP:8000/v1/chat/completions \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer your-api-key" \
-    -d '{"model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0", "messages": [{"role": "user", "content": "What is 2+2?"}], "max_tokens": 50}' \
-    | jq '.choices[0].message.content'
+curl -s http://YOUR_LXC_IP:8000/v1/chat/completions -H "Content-Type: application/json" -H "Authorization: Bearer your-api-key" -d '{"model":"TinyLlama/TinyLlama-1.1B-Chat-v1.0","messages":[{"role":"user","content":"What is 2+2?"}],"max_tokens":50}' | jq '.choices[0].message.content'
 ```
 
 ---
