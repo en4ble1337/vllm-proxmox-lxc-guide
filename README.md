@@ -365,7 +365,8 @@ pip install transformers
 pip install huggingface_hub
 ```
 
-> [!NOTE] With CUDA toolkit on both host and LXC, `pip install flash-attn` should work without issues.
+> [!NOTE]
+> With CUDA toolkit on both host and LXC, `pip install flash-attn` should work without issues.
 
 ---
 
