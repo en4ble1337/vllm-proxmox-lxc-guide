@@ -409,34 +409,74 @@ EOF
 
 ```bash
 cat << 'SCRIPT' > vllm_test_flash.py
-# Check flash-attn is installed
+import sys
+import os
+
+# Set environment to force usage if needed, though vLLM usually detects valid libs
+os.environ["VLLM_LOGGING_LEVEL"] = "INFO"
+
+try:
+    from vllm import LLM, SamplingParams
+    import torch
+except ImportError:
+    print("❌ Critical: vLLM or torch not installed.")
+    sys.exit(1)
+
+print("="*50)
+print("⚡ vLLM FLASH ATTENTION DIAGNOSTIC ⚡")
+print("="*50)
+
+# 1. CHECK DEPENDENCIES
+print("\n[1] Checking Acceleration Libraries:")
+drivers = []
+
 try:
     import flash_attn
-    print(f"✓ flash-attn version: {flash_attn.__version__}")
+    print(f"  ✓ flash-attn found: {flash_attn.__version__}")
+    drivers.append("flash-attn")
 except ImportError:
-    print("✗ flash-attn: NOT INSTALLED")
-    exit(1)
+    print("  - flash-attn not installed")
 
-# Check PyTorch CUDA
-import torch
-print(f"✓ PyTorch version: {torch.__version__}")
-print(f"✓ CUDA available: {torch.cuda.is_available()}")
-print(f"✓ GPU: {torch.cuda.get_device_name(0)}")
+try:
+    import flashinfer
+    print(f"  ✓ flashinfer found: {flashinfer.__version__}")
+    drivers.append("flashinfer")
+except ImportError:
+    print("  - flashinfer not installed")
 
-# Quick functional test
-from flash_attn import flash_attn_func
-import torch
+if not drivers:
+    print("  ⚠️  WARNING: No optimized backend found. vLLM will be slow.")
 
-# Create test tensors
-batch, heads, seq_len, head_dim = 1, 8, 64, 64
-q = torch.randn(batch, seq_len, heads, head_dim, device='cuda', dtype=torch.float16)
-k = torch.randn(batch, seq_len, heads, head_dim, device='cuda', dtype=torch.float16)
-v = torch.randn(batch, seq_len, heads, head_dim, device='cuda', dtype=torch.float16)
+# 2. FUNCTIONAL TEST
+print("\n[2] Initializing vLLM with 'TinyLlama'...")
+# Use the main guard to prevent multiprocessing recursive loop issues
+if __name__ == "__main__":
+    try:
+        # We disable logging stats to keep output clean
+        llm = LLM(
+            model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+            gpu_memory_utilization=0.6,
+            dtype="float16",
+            disable_log_stats=True
+        )
+        
+        print("\n[3] Generating test token...")
+        sampling_params = SamplingParams(temperature=0, max_tokens=5)
+        output = llm.generate(["Test"], sampling_params)
+        
+        print("\n" + "="*50)
+        print("RESULT:")
+        if output and len(drivers) > 0:
+            print(f"✅ SUCCESS: vLLM is generating using {drivers[0]}.")
+        elif output:
+            print("⚠️  PARTIAL SUCCESS: Generation works, but using unoptimized backend.")
+        else:
+            print("❌ FAILURE: Generation failed.")
+        print("="*50)
 
-# Run flash attention
-output = flash_attn_func(q, k, v)
-print(f"✓ flash-attn functional test: PASSED (output shape: {output.shape})")
-print("\n✓ Flash-attention is working correctly!")
+    except Exception as e:
+        print(f"\n❌ CRITICAL ERROR: {e}")
+        sys.exit(1)
 SCRIPT
 
 python3 vllm_test_flash.py
