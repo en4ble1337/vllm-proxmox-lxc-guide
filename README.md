@@ -42,7 +42,7 @@ Both are excellent tools for running AI models locally, but they serve different
 
 This guide installs vLLM with flash-attention on a Proxmox LXC container with GPU passthrough. 
 > [!CAUTION]
-> **⚠️ CRITICAL:** CUDA toolkit must be installed on **BOTH** the Proxmox host AND the LXC container. This is commonly missed and causes flash-attn compilation failures (segfaults).
+> CUDA toolkit must be installed on **BOTH** the Proxmox host AND the LXC container. This is commonly missed and causes flash-attn compilation failures (segfaults).
 
 ---
 
@@ -102,7 +102,7 @@ Before starting this guide, ensure you have:
 # PART 1: PROXMOX HOST SETUP
 
 > [!CAUTION]
-> **⚠️ CRITICAL: Do not skip this section! Flash-attn will segfault without host CUDA.**
+> Do not skip this section! Flash-attn will segfault without host CUDA.**
 
 These steps are performed on the **Proxmox host**, not inside an LXC.
 
@@ -113,7 +113,7 @@ Access via: Proxmox web UI → Select node → Shell (or SSH to host)
 ## Phase 0A: Install NVIDIA Driver on Host
 
 > [!NOTE]
-> **Note:** For detailed GPU passthrough setup, see the [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) guide.
+> For detailed GPU passthrough setup, see the [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) guide.
 
 Skip if already installed. Verify with `nvidia-smi`.
 
@@ -200,7 +200,7 @@ nvcc --version
 - nvidia-smi shows driver 580.x, CUDA 12.8
 - nvcc shows `Cuda compilation tools, release 12.8`
 
-[!IMPORTANT] **If nvidia-smi fails:** Reinstall NVIDIA driver (Phase 0A), then verify again.
+> [!IMPORTANT] **If nvidia-smi fails:** Reinstall NVIDIA driver (Phase 0A), then verify again.
 
 **STOP if either command fails. Do not proceed to LXC setup.**
 
@@ -244,7 +244,7 @@ lxc.mount.entry: /dev/nvidia-modeset dev/nvidia-modeset none bind,optional,creat
 
 For multiple GPUs, add additional nvidia entries (nvidia1, nvidia2, etc.)
 
-[!TIP] **Detailed Instructions:** See [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) for step-by-step GPU passthrough configuration.
+> [!TIP] **Detailed Instructions:** See [GPU Passthrough for Proxmox LXC Container](https://github.com/en4ble1337/GPU-Passthrough-for-Proxmox-LXC-Container) for step-by-step GPU passthrough configuration.
 
 ---
 
@@ -315,7 +315,7 @@ apt install -y cuda-toolkit-12-8
 
 Note: Some optional packages may fail — that's OK if nvcc works.
 
-**Note:** If `nvidia-smi` stops working after this step, reinstall the driver (Phase 2).
+> [!NOTE] If `nvidia-smi` stops working after this step, reinstall the driver (Phase 2).
 
 ---
 
@@ -362,7 +362,7 @@ pip install transformers
 pip install huggingface_hub
 ```
 
-[!NOTE] With CUDA toolkit on both host and LXC, `pip install flash-attn` should work without issues.
+> [!NOTE] With CUDA toolkit on both host and LXC, `pip install flash-attn` should work without issues.
 
 ---
 
@@ -508,18 +508,6 @@ Usage:
 ```bash
 ~/start-vllm.sh "model-name" 8000 "api-key"
 ```
-
----
-
-## Models That Fit on RTX 3080 (10GB)
-
-| Model | Approx VRAM | Notes |
-|-------|-------------|-------|
-| TinyLlama-1.1B | ~2 GB | Testing only |
-| Phi-3-mini-4k (3.8B) | ~8 GB | Good quality |
-| Llama-3.2-3B | ~6 GB | Meta's latest small |
-| Qwen2.5-3B | ~6 GB | Strong multilingual |
-| Mistral-7B (AWQ 4-bit) | ~5 GB | Needs quantized version |
 
 ---
 
