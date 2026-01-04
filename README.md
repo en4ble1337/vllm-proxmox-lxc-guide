@@ -1,6 +1,6 @@
 # vLLM Installation Guide for Proxmox LXC with GPU Passthrough
 
-![vLLM Infrastructure](infographic.png)
+![vLLM Infrastructure](infographic_flow.png)
 
 ## What is vLLM?
 
